@@ -1,6 +1,6 @@
-import { TodoDto } from "src/dto/todo.tdo";
+import { CreateTodoDto } from "src/dto/creare-todo.tdo";
 
-export const todos: TodoDto[] = [
+export const todos: CreateTodoDto[] = [
   {
     "id": 1,
     "title": "delectus aut autem",

@@ -1,33 +1,35 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { TodoDto } from 'src/dto/todo.tdo';
+import { Injectable } from '@nestjs/common';
+import { CreateTodoDto } from 'src/dto/creare-todo.tdo';
 import { todos } from './data/todos-list';
+import { UpdateTodoDto } from 'src/dto/update-todo.dto';
 
 @Injectable()
 export class TodoService {
 
-    createNewTodo(createTodoDto: TodoDto): TodoDto {
+    createNew(createTodoDto: CreateTodoDto): CreateTodoDto {
         todos.push({...createTodoDto});
         return todos.find(todo => todo.id === +createTodoDto.id);
     }
 
-    getAllTodos(): TodoDto[] {
+    getAll(): CreateTodoDto[] {
         return todos;
     }
 
-    getTodoById(id: number): TodoDto {
+    getById(id: number): CreateTodoDto {
         return todos.find(todo => todo.id === id)
     }
 
-    updateTodoById(id: number, updateTodoDto: TodoDto): TodoDto {
+    updateById(id: number, updateTodoDto: UpdateTodoDto): UpdateTodoDto {
         const index = todos.findIndex(todo => todo.id === id);
-        todos[index] = updateTodoDto;
+        todos[index] = {...todos[index], ...updateTodoDto};
         return todos[index];
     }
 
-    deleteTodoById(id: number) {
+    deleteById(id: number) {
         const index = todos.findIndex(todo => todo.id === id);;
         const todo = todos[index];
         todos.splice(index, 1);
         return todo;
+        
     }
 }

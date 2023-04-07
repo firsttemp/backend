@@ -1,34 +1,35 @@
-import { Controller, Body, Post, Get, Put, Delete, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Body, Post, Get, Put, Delete, Param } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { TodoDto } from 'src/dto/todo.tdo';
+import { CreateTodoDto } from 'src/dto/creare-todo.tdo';
+import { UpdateTodoDto } from 'src/dto/update-todo.dto';
 
 @Controller('/todos')
 export class TodoController {
     constructor(private readonly todoService: TodoService) {}
 
     @Post()
-    createOne(@Body() createTodoDto: TodoDto) {
-        return this.todoService.createNewTodo(createTodoDto);
+    createOne(@Body() createTodoDto: CreateTodoDto) {
+        return this.todoService.createNew(createTodoDto);
     }
 
     @Get()
     getAll() {
-        return this.todoService.getAllTodos();
+        return this.todoService.getAll();
     }
 
     @Get(':id')
     getOne(@Param('id') id: string) {
-        return this.todoService.getTodoById(+id);
+        return this.todoService.getById(+id);
     }
 
     @Put(':id')
-    updateOne(@Param('id') id: string, @Body() updateTodoDto: TodoDto) {
-        return this.todoService.updateTodoById(+id, updateTodoDto)
+    updateOne(@Param('id') id: string, @Body() updateTodoDto: UpdateTodoDto) {
+        return this.todoService.updateById(+id, updateTodoDto)
     }
 
     @Delete(':id')
     deleteOne(@Param('id') id: string) {
-        return this.todoService.deleteTodoById(+id);
+        return this.todoService.deleteById(+id);
         
     }
 }
