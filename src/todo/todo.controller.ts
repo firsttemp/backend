@@ -1,13 +1,21 @@
-import { Controller, Body, Post, Get, Put, Delete, Param } from '@nestjs/common';
+import {
+    Controller,
+    Body, Post,
+    Get, Put, Delete,
+    Param, UsePipes,
+    ParseIntPipe
+} from "@nestjs/common";
+import { CreateTodoDto } from 'src/todo/dto/creare-todo.tdo';
 import { TodoService } from './todo.service';
-import { CreateTodoDto } from 'src/dto/creare-todo.tdo';
-import { UpdateTodoDto } from 'src/dto/update-todo.dto';
+import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto';
+import { MyValidationPipe } from "./validation/validation-pipe-dto.service";
 
 @Controller('/todos')
 export class TodoController {
     constructor(private readonly todoService: TodoService) {}
 
     @Post()
+    @UsePipes(MyValidationPipe)
     createOne(@Body() createTodoDto: CreateTodoDto) {
         return this.todoService.createNew(createTodoDto);
     }
@@ -18,7 +26,7 @@ export class TodoController {
     }
 
     @Get(':id')
-    getOne(@Param('id') id: string) {
+    getOne(@Param('id', ParseIntPipe) id: number) {
         return this.todoService.getById(+id);
     }
 
@@ -30,6 +38,6 @@ export class TodoController {
     @Delete(':id')
     deleteOne(@Param('id') id: string) {
         return this.todoService.deleteById(+id);
-        
+
     }
 }

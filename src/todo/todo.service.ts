@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTodoDto } from 'src/dto/creare-todo.tdo';
+import { CreateTodoDto } from 'src/todo/dto/creare-todo.tdo';
 import { todos } from './data/todos-list';
-import { UpdateTodoDto } from 'src/dto/update-todo.dto';
+import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto';
 
 @Injectable()
 export class TodoService {
@@ -30,6 +30,5 @@ export class TodoService {
         const todo = todos[index];
         todos.splice(index, 1);
         return todo;
-        
     }
 }

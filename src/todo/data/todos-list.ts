@@ -1,4 +1,4 @@
-import { CreateTodoDto } from "src/dto/creare-todo.tdo";
+import { CreateTodoDto } from "src/todo/dto/creare-todo.tdo";
 
 export const todos: CreateTodoDto[] = [
   {
