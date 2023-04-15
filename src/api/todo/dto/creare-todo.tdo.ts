@@ -1,11 +1,8 @@
 import { IsNumber, IsString, IsBoolean, IsNotEmpty} from "class-validator";
+import { User } from "../../user/user.entity";
 
 
 export class CreateTodoDto {
-
-    @IsNumber()
-    @IsNotEmpty()
-    id: number;
 
     @IsString()
     @IsNotEmpty()
@@ -14,4 +11,8 @@ export class CreateTodoDto {
     @IsBoolean()
     @IsNotEmpty()
     completed: boolean;
+
+    @IsNotEmpty()
+    @IsNumber()
+    user: User;
 }
