@@ -4,13 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany, ManyToMany
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
+import { Role } from "../auth/role/role.entity";
 
 @Entity()
 export class User {
+
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -37,8 +39,11 @@ export class User {
   isDeleted: boolean;
 
   @CreateDateColumn({ type: "timestamp" })
-  public createdAt!: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ type: "timestamp" })
-  public updatedAt!: Date;
+  updatedAt!: Date;
+
+  @ManyToMany(() => Role)
+  roles: Role;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CreateTodoDto } from "src/api/todo/dto/creare-todo.tdo";
-import { UpdateTodoDto } from "src/api/todo/dto/update-todo.dto";
+import { CreateTodoDto } from "src/todo/dto/creare-todo.tdo";
+import { UpdateTodoDto } from "src/todo/dto/update-todo.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Todo } from "./todo.entity";
