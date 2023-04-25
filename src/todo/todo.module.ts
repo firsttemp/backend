@@ -6,10 +6,7 @@ import { Todo } from "./todo.entity";
 import { User } from "../user/user.entity";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Todo]),
-        TypeOrmModule.forFeature([User])
-    ],
+    imports: [ TypeOrmModule.forFeature([Todo, User]) ],
     controllers: [TodoController],
     providers: [TodoService],
 })

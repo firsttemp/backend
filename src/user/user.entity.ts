@@ -1,14 +1,13 @@
 import {
-  Entity,
   PrimaryGeneratedColumn,
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany, ManyToMany
+  OneToMany,
+  Column,
+  Entity,
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
-import { Role } from "../auth/role/role.entity";
 
 @Entity()
 export class User {
@@ -35,15 +34,10 @@ export class User {
   @OneToMany(() => Todo, todo => todo.user)
   todos: Todo[];
 
-  @Column({ type: "boolean", default: false })
-  isDeleted: boolean;
-
-  @CreateDateColumn({ type: "timestamp" })
+  @CreateDateColumn({ type: "date" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "timestamp" })
+  @UpdateDateColumn({ type: "date" })
   updatedAt!: Date;
 
-  @ManyToMany(() => Role)
-  roles: Role;
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/user-create.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
@@ -24,23 +24,20 @@ export class UserService {
     return this.userRepository.findOne({where: {email}})
   }
 
+  getUserByUsername(username: string): Promise<User> {
+    return this.userRepository.findOne({where: {username}})
+  }
+
   findAll(): Promise<User[]> {
     return this.userRepository.find({ relations: ['todos'] });
   }
 
-  updateById(id: number, todo: UpdateUserDto): Promise<any> {
-    return this.userRepository.update(id, todo)
+  updateById(id: number, dto: UpdateUserDto): Promise<any> {
+    return this.userRepository.update(id, dto)
   }
 
   deleteById(id: number): Promise<any> {
     return this.userRepository.delete(id);
   }
 
-  async getById(id: number) {
-    const user = await this.userRepository.findOne({where: {id}});
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
-  }
 }

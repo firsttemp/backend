@@ -14,13 +14,9 @@ import { DataSource } from "typeorm";
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      imports: [ConfigModule],
       useClass: TypeormConfigService,
       dataSourceFactory: async (options) => {
         return await new DataSource(options).initialize(); }}),
-
-    // Another module
   ]
 })
 export class AppModule {
