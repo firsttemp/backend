@@ -6,28 +6,20 @@ import {
   Body,
   Get,
   Param,
-  Post,
   Put,
   UseInterceptors
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto } from "./dto/user-create.dto";
 import { UpdateUserDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('user')
+@ApiTags('users')
 @ApiBearerAuth()
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller("/user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiBody({ type: CreateUserDto })
-  createOne(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
-  }
 
   @Get("/all")
   getAll() {
