@@ -27,6 +27,14 @@ export class TodoService {
     return this.todoRepository.findOne({where: {id}, loadRelationIds: true})
   };
 
+  paginate(limit: number, offset: number) {
+    return this.todoRepository.find({
+      skip: offset,
+      take: limit,
+      loadRelationIds: true
+    });
+  }
+
   async updateById(id: number, todo: UpdateTodoDto): Promise<any> {
     return this.todoRepository.update(id, todo);
   }

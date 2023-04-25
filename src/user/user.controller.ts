@@ -1,5 +1,6 @@
 import {
   ClassSerializerInterceptor,
+  UseInterceptors, Query,
   ParseIntPipe,
   Controller,
   Delete,
@@ -7,7 +8,7 @@ import {
   Get,
   Param,
   Put,
-  UseInterceptors
+
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/user-update.dto";
@@ -21,9 +22,16 @@ import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get("/all")
+  @Get("all")
   getAll() {
     return this.userService.findAll();
+  }
+
+  @Get('paginate')
+  paginate(
+    @Query('limit') limit: number,
+    @Query('offset') offset: number) {
+    return this.userService.paginate(limit, offset);
   }
 
   @Get(":id")
@@ -31,6 +39,7 @@ export class UserController {
   getOne(@Param("id", ParseIntPipe) id: number): Promise<User> {
     return this.userService.getUserByID(id);
   }
+
 
   @Put(":id")
   @ApiParam({ name: 'id', type: Number})
@@ -44,4 +53,6 @@ export class UserController {
     return this.userService.deleteById(+id);
 
   }
+
+
 }

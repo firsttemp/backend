@@ -17,24 +17,33 @@ export class UserService {
   }
 
   getUserByID(id: number): Promise<User> {
-    return this.userRepository.findOne({where: {id}, relations: ['todos']})
+    return this.userRepository.findOne({ where: { id }, relations: ["todos"] });
   }
 
   getUserByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({where: {email}})
+    return this.userRepository.findOne({ where: { email } });
   }
 
   getUserByUsername(username: string): Promise<User> {
-    return this.userRepository.findOne({where: {username}})
+    return this.userRepository.findOne({ where: { username } });
   }
 
   findAll(): Promise<User[]> {
-    return this.userRepository.find({ relations: ['todos'] });
+    return this.userRepository.find({ relations: ["todos"] });
   }
 
   updateById(id: number, dto: UpdateUserDto): Promise<any> {
-    return this.userRepository.update(id, dto)
+    return this.userRepository.update(id, dto);
   }
+
+  paginate(limit: number, offset: number) {
+    return this.userRepository.find({
+      skip: offset,
+      take: limit,
+      relations: ["todos"]
+    });
+  }
+
 
   deleteById(id: number): Promise<any> {
     return this.userRepository.delete(id);

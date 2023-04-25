@@ -4,7 +4,7 @@ import {
   Get, Put,
   Delete,
   Param,
-  ParseIntPipe
+  ParseIntPipe, Query
 } from "@nestjs/common";
 import { CreateTodoDto } from "src/todo/dto/creare-todo.tdo";
 import { TodoService } from "./todo.service";
@@ -25,16 +25,25 @@ export class TodoController {
     return this.todoService.createNew(createTodoDto);
   }
 
-  @Get()
+  @Get('all')
   getAll() {
     return this.todoService.getAll();
   }
 
-  @Get(":id")
+  @Get('paginate')
+  paginate(
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number
+  ) {
+    return this.todoService.paginate(limit, offset);
+  }
+
+  @Get(':id')
   @ApiParam({ name: 'id', type: Number})
   getOne(@Param("id", ParseIntPipe) id: number) {
     return this.todoService.getById(+id);
   }
+
 
   @Put(":id")
   @ApiParam({ name: 'id', type: Number})
