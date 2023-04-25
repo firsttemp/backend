@@ -3,7 +3,7 @@ import { TodoModule } from "./todo/todo.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule} from "@nestjs/config";
 import { TypeormConfigService } from "./shared/typeorm-config.service";
 import { DataSource } from "typeorm";
 
