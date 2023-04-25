@@ -14,6 +14,8 @@ import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
 import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
+import { Roles } from "../auth/roles/roles.decorator";
+import { Role } from "../auth/roles/roles.enum";
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -47,7 +49,9 @@ export class UserController {
     return this.userService.updateById(id, updateUserDto);
   }
 
+
   @Delete(":id")
+  @Roles(Role.Admin)
   @ApiParam({ name: 'id', type: Number})
   deleteOne(@Param("id", ParseIntPipe) id: string) {
     return this.userService.deleteById(+id);

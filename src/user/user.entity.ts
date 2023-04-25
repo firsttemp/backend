@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
+import { Role } from "../auth/roles/roles.enum";
 
 @Entity()
 export class User {
@@ -33,6 +34,14 @@ export class User {
 
   @OneToMany(() => Todo, todo => todo.user)
   todos: Todo[];
+
+  @Column({
+    type: "enum",
+    enum: Role,
+    array: true,
+    default: [Role.User]
+  })
+  roles: Role[];
 
   @CreateDateColumn({ type: "date" })
   createdAt!: Date;

@@ -8,7 +8,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { JwtStrategy } from "./strategies/jwt.strategy";
-
+import { RolesGuard } from "./roles/role.guard";
 
 @Module({
 
@@ -17,7 +17,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     PassportModule,
     JwtModule.register({
       secret: 'hello',
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: '1h' },
     })
   ],
   providers: [
@@ -27,6 +27,10 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     }
   ],
   controllers: [AuthController]
