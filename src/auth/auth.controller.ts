@@ -23,10 +23,10 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post("/signing")
+  @Post("/login")
   @ApiBody({ type: LoginDto })
-  signIn(@Request() req) {
-    return this.authService.signIn(req.user);
+  login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
   @Post("/logout")
