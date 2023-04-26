@@ -44,7 +44,6 @@ export class UserService {
     });
   }
 
-
   deleteById(id: number): Promise<any> {
     return this.userRepository.delete(id);
   }
