@@ -14,8 +14,8 @@ import { UserService } from "./user.service";
 import { UpdateUserDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
 import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Roles } from "../auth/roles/roles.decorator";
-import { Role } from "../auth/roles/roles.enum";
+import { Roles } from "../auth/decorator/roles.decorator";
+import { Role } from "../shared/types/roles.enum";
 
 @ApiTags('users')
 @ApiBearerAuth()

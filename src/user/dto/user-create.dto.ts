@@ -26,4 +26,13 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @IsString()
+  avatar: string;
+
+  @IsString( {each: true,})
+  images: string[];
+
+  @IsString( {each: true})
+  videos: string[];
 }

@@ -6,9 +6,9 @@ import {
   Param,
   ParseIntPipe, Query
 } from "@nestjs/common";
-import { CreateTodoDto } from "src/todo/dto/creare-todo.tdo";
+import { CreateTodoDto } from "src/todo/dto/todo-create.dto";
 import { TodoService } from "./todo.service";
-import { UpdateTodoDto } from "src/todo/dto/update-todo.dto";
+import { TodoUpdateDto } from "src/todo/dto/todo-update.dto";
 import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('todos')
@@ -47,7 +47,7 @@ export class TodoController {
 
   @Put(":id")
   @ApiParam({ name: 'id', type: Number})
-  updateOne(@Param("id", ParseIntPipe) id: string, @Body() updateTodoDto: UpdateTodoDto) {
+  updateOne(@Param("id", ParseIntPipe) id: string, @Body() updateTodoDto: TodoUpdateDto) {
     return this.todoService.updateById(+id, updateTodoDto);
   }
 

@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
-import { Role } from "../auth/roles/roles.enum";
+import { Role } from "../shared/types/roles.enum";
 
 @Entity()
 export class User {
@@ -42,6 +42,15 @@ export class User {
     default: [Role.User]
   })
   roles: Role[];
+
+  @Column({ type: "varchar", length: 200, nullable: true})
+  avatar: string;
+
+  @Column({ type: "varchar", length: 200, nullable: true, array: true, default: []})
+  images: string[];
+
+  @Column({ type: "varchar", length: 200, nullable: true, array: true, default: []})
+  videos: string[];
 
   @CreateDateColumn({ type: "date" })
   createdAt!: Date;

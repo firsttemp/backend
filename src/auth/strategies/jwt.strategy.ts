@@ -4,6 +4,7 @@ import { Strategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
 import { UserService } from "../../user/user.service";
 import { ConfigService } from "@nestjs/config";
+import { IReqUser } from "../../shared/types/req-user.interface";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,10 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: any): Promise<IReqUser> {
     const user = await this.userService.getUserByEmail(payload.email)
     return {
-      userId: user.id,
+      id: user.id,
       email: user.email,
       username: user.username,
       roles: user.roles

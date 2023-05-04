@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CreateTodoDto } from "src/todo/dto/creare-todo.tdo";
-import { UpdateTodoDto } from "src/todo/dto/update-todo.dto";
+import { CreateTodoDto } from "src/todo/dto/todo-create.dto";
+import { TodoUpdateDto } from "src/todo/dto/todo-update.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Todo } from "./todo.entity";
@@ -35,7 +35,7 @@ export class TodoService {
     });
   }
 
-  async updateById(id: number, todo: UpdateTodoDto): Promise<any> {
+  async updateById(id: number, todo: TodoUpdateDto): Promise<any> {
     return this.todoRepository.update(id, todo);
   }
 
