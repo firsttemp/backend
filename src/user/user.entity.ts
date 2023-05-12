@@ -4,11 +4,13 @@ import {
   UpdateDateColumn,
   OneToMany,
   Column,
-  Entity,
+  Entity, OneToOne,
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
-import { Role } from "../shared/types/roles.enum";
+import { RoleEnum } from "../shared/types/roles.enum";
+import { Cart } from "../cart/cart.entity";
+import { Order } from "../orders/order.entity";
 
 @Entity()
 export class User {
@@ -29,7 +31,7 @@ export class User {
   @Column({type: "varchar", length: 30})
   firstname: string;
 
-  @Column({type: "varchar", length: 30})
+  @Column({type: "varchar", length: 30, default: ""})
   lastname: string;
 
   @OneToMany(() => Todo, todo => todo.user)
@@ -37,11 +39,11 @@ export class User {
 
   @Column({
     type: "enum",
-    enum: Role,
+    enum: RoleEnum,
     array: true,
-    default: [Role.User]
+    default: [RoleEnum.User]
   })
-  roles: Role[];
+  roles: RoleEnum[];
 
   @Column({ type: "varchar", length: 200, nullable: true})
   avatar: string;
@@ -51,6 +53,12 @@ export class User {
 
   @Column({ type: "varchar", length: 200, nullable: true, array: true, default: []})
   videos: string[];
+
+  @OneToOne(() => Cart, cart => cart.user)
+  cart: Cart;
+
+  @OneToMany(() => Order, order => order.user)
+  orders: Order[];
 
   @CreateDateColumn({ type: "date" })
   createdAt!: Date;

@@ -14,17 +14,16 @@ export class AuthService {
   ) {}
 
   async signUp(dto: CreateUserDto) {
-    if (await this.userService.getUserByUsername(dto.username)) throw new BadRequestException('Username already exists');
-    if (await this.userService.getUserByEmail(dto.email)) throw new BadRequestException('Email already exists');
+    if (await this.userService.getByUsername(dto.username)) throw new BadRequestException('Username already exists');
+    if (await this.userService.getByEmail(dto.email)) throw new BadRequestException('Email already exists');
 
     const hashPassword = await this.hashData(dto.password);
-    const user = await this.userService.createUser({...dto, password: hashPassword});
-    const { password, ...result } = user;
-    return result;
+    await this.userService.create({...dto, password: hashPassword});
+    return {message: 'User created successfully!'};
   }
 
   async login(user: any): Promise<any> {
-    const payload = { email: user.email, sub: user.id, username: user.username};
+    const payload = { sub: user.id, email: user.email};
     return {
       access_token: this.jwtService.sign(payload),
     }
@@ -32,7 +31,7 @@ export class AuthService {
 
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.userService.getUserByEmail(email);
+    const user = await this.userService.getByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
       return result;

@@ -11,16 +11,16 @@ import {
 
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UpdateUserDto } from "./dto/user-update.dto";
+import { UserUpdateDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
 import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Roles } from "../auth/decorator/roles.decorator";
-import { Role } from "../shared/types/roles.enum";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { RoleEnum } from "../shared/types/roles.enum";
 
 @ApiTags('users')
 @ApiBearerAuth()
 @UseInterceptors(ClassSerializerInterceptor)
-@Controller("/user")
+@Controller("/users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -39,19 +39,19 @@ export class UserController {
   @Get(":id")
   @ApiParam({ name: 'id', type: Number})
   getOne(@Param("id", ParseIntPipe) id: number): Promise<User> {
-    return this.userService.getUserByID(id);
+    return this.userService.getByID(id);
   }
 
 
   @Put(":id")
   @ApiParam({ name: 'id', type: Number})
-  updateOne(@Param("id", ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+  updateOne(@Param("id", ParseIntPipe) id: number, @Body() updateUserDto: UserUpdateDto) {
     return this.userService.updateById(id, updateUserDto);
   }
 
 
   @Delete(":id")
-  @Roles(Role.Admin)
+  @Roles(RoleEnum.Admin, RoleEnum.SuperAdmin)
   @ApiParam({ name: 'id', type: Number})
   deleteOne(@Param("id", ParseIntPipe) id: string) {
     return this.userService.deleteById(+id);

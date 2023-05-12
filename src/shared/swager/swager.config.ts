@@ -1,6 +1,6 @@
 import { DocumentBuilder } from "@nestjs/swagger";
 
-export const config = new DocumentBuilder()
+export const swagerConfig = new DocumentBuilder()
   .addBearerAuth()
   .setTitle('API example')
   .setDescription('The API description')

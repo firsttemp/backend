@@ -17,7 +17,7 @@ import { ConfigService } from "@nestjs/config";
         migrations: ['dist/migrations/*.{ts,js}'],
         migrationsTableName: 'typeorm_migrations',
         logger: 'file',
-        synchronize: true, // NO in production!
+        synchronize: true,
       }),
       inject: [ConfigService],
     })

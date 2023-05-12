@@ -3,7 +3,8 @@ import { CreateUserDto } from "./dto/user-create.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
 import { Repository } from "typeorm";
-import { UpdateUserDto } from "./dto/user-update.dto";
+import { UserUpdateDto } from "./dto/user-update.dto";
+import { Cart } from "../cart/cart.entity";
 
 
 @Injectable()
@@ -12,27 +13,28 @@ export class UserService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
-  createUser(user: CreateUserDto): Promise<User> {
-    return this.userRepository.save(user);
+  create(user: CreateUserDto): Promise<User> {
+    const newUser = {...user, cart: new Cart()}
+    return this.userRepository.save(newUser);
   }
 
-  getUserByID(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { id }, relations: ["todos"] });
+  getByID(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id }, relations: ["todos", "cart"] });
   }
 
-  getUserByEmail(email: string): Promise<User> {
+  getByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  getUserByUsername(username: string): Promise<User> {
+  getByUsername(username: string): Promise<User> {
     return this.userRepository.findOne({ where: { username } });
   }
 
   findAll(): Promise<User[]> {
-    return this.userRepository.find({ relations: ["todos"] });
+    return this.userRepository.find();
   }
 
-  updateById(id: number, dto: UpdateUserDto): Promise<any> {
+  updateById(id: number, dto: UserUpdateDto): Promise<any> {
     return this.userRepository.update(id, dto);
   }
 
