@@ -5,6 +5,7 @@ import { ExtractJwt } from "passport-jwt";
 import { UserService } from "../../user/user.service";
 import { ConfigService } from "@nestjs/config";
 import { User } from "../../user/user.entity";
+import { IJwtPayload } from "../../shared/types/jwt-payload.interface";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,14 +20,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<User> {
-    const user = await this.userService.getByEmail(payload.email)
+  async validate(payload: IJwtPayload): Promise<User> {
+    const user = await this.userService.getByID(payload.sub)
     if (!user) {
       throw new UnauthorizedException();
     }
 
     return {
-      ...user
+      ...user,
+      password: null
     }
   }
 }

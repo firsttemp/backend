@@ -15,31 +15,33 @@ export class TodoService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
-  async createNew(todo: CreateTodoDto) {
-    return this.todoRepository.save(todo)
+
+  async createNew(todo: CreateTodoDto, user: User) {
+    const newTodo = {...todo, user}
+    return {...await this.todoRepository.save(newTodo), user: user.id}
   }
 
-  getAll(): Promise<Todo[]> {
-    return this.todoRepository.find({loadRelationIds: true});
+  async getAll(user: User): Promise<Todo[]> {
+    return this.todoRepository.find({where: {user: {id: user.id}}, loadRelationIds: true});
   }
 
   async getById(id: number): Promise<Todo> {
     return this.todoRepository.findOne({where: {id}, loadRelationIds: true})
   };
 
-  paginate(limit: number, offset: number) {
+  paginate(limit: number, offset: number, user: User) {
     return this.todoRepository.find({
+      where: {user: {id: user.id}},
       skip: offset,
       take: limit,
-      loadRelationIds: true
     });
   }
 
-  async updateById(id: number, todo: TodoUpdateDto): Promise<any> {
-    return this.todoRepository.update(id, todo);
+  async updateById(id: number, todo: TodoUpdateDto, user: User): Promise<any> {
+    return this.todoRepository.update({id, user: {id: user.id}}, todo);
   }
 
-  deleteById(id: number): Promise<any> {
-    return this.todoRepository.delete(id);
+  deleteById(id: number, user: User): Promise<any> {
+    return this.todoRepository.delete({ id, user: {id: user.id} });
   }
 }

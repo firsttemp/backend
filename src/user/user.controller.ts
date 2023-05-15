@@ -14,11 +14,12 @@ import { UserService } from "./user.service";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
 import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
-import { Roles } from "../auth/decorators/roles.decorator";
+import { Roles } from "../shared/decorators/roles.decorator";
 import { RoleEnum } from "../shared/types/roles.enum";
 
 @ApiTags('users')
 @ApiBearerAuth()
+@Roles(RoleEnum.Admin, RoleEnum.SuperAdmin)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller("/users")
 export class UserController {
@@ -51,7 +52,7 @@ export class UserController {
 
 
   @Delete(":id")
-  @Roles(RoleEnum.Admin, RoleEnum.SuperAdmin)
+
   @ApiParam({ name: 'id', type: Number})
   deleteOne(@Param("id", ParseIntPipe) id: string) {
     return this.userService.deleteById(+id);

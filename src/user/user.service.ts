@@ -7,6 +7,7 @@ import { UserUpdateDto } from "./dto/user-update.dto";
 import { Cart } from "../cart/cart.entity";
 
 
+
 @Injectable()
 export class UserService {
 
@@ -19,7 +20,7 @@ export class UserService {
   }
 
   getByID(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { id }, relations: ["todos", "cart"] });
+    return this.userRepository.findOne({ where: { id }});
   }
 
   getByEmail(email: string): Promise<User> {

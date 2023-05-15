@@ -1,5 +1,4 @@
-import { IsNumber, IsString, IsBoolean, IsNotEmpty} from "class-validator";
-import { User } from "../../user/user.entity";
+import { IsString, IsBoolean, IsNotEmpty} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 
@@ -14,9 +13,4 @@ export class CreateTodoDto {
     @IsBoolean()
     @IsNotEmpty()
     completed: boolean;
-
-    @ApiProperty({ example: 1})
-    @IsNotEmpty()
-    @IsNumber()
-    user: User;
 }

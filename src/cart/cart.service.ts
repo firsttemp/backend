@@ -12,7 +12,7 @@ export class CartService {
     @InjectRepository(Cart) private readonly cartRepository: Repository<Cart>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>
   ) {}
-  async findAll(user: User): Promise<Cart | string> {
+  async find(user: User): Promise<Cart | string> {
     return await this.getUserCart(user) || "Cart is empty"
   }
 

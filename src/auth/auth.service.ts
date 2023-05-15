@@ -3,6 +3,8 @@ import { UserService } from "../user/user.service";
 import { CreateUserDto } from "../user/dto/user-create.dto";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { User } from "../user/user.entity";
+import { IJwtPayload } from "../shared/types/jwt-payload.interface";
 
 
 
@@ -13,17 +15,17 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async signUp(dto: CreateUserDto) {
+  async signUp(dto: CreateUserDto): Promise<Partial<User>> {
     if (await this.userService.getByUsername(dto.username)) throw new BadRequestException('Username already exists');
     if (await this.userService.getByEmail(dto.email)) throw new BadRequestException('Email already exists');
 
-    const hashPassword = await this.hashData(dto.password);
-    await this.userService.create({...dto, password: hashPassword});
-    return {message: 'User created successfully!'};
+    const hashPassword: string = await this.hashData(dto.password);
+    const {id, email, username}: Partial<User> = await this.userService.create({...dto, password: hashPassword});
+    return {id, email, username};
   }
 
-  async login(user: any): Promise<any> {
-    const payload = { sub: user.id, email: user.email};
+  async login(user: User): Promise<any> {
+    const payload: IJwtPayload = { sub: user.id, email: user.email};
     return {
       access_token: this.jwtService.sign(payload),
     }
@@ -31,7 +33,7 @@ export class AuthService {
 
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.userService.getByEmail(email);
+    const user: User = await this.userService.getByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
       return result;
