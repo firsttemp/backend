@@ -12,19 +12,18 @@ export class OrdersService {
   constructor(
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     @InjectRepository(Product) private productRepository: Repository<Product>
-  ) {
-  }
+  ) {}
 
   async find(user: User): Promise<Order[]> {
     return await this.getUserOrders(user);
   }
 
   async create(orderCreateDto: OrderCreateDto, user: User): Promise<string> {
-    const products = await this.productRepository.findBy({ id: In([...orderCreateDto.items]) });
+    const products: Product[] = await this.productRepository.findBy({ id: In([...orderCreateDto.items]) });
     if (products.length !== orderCreateDto.items.length) {
       throw new UnprocessableEntityException("Item not found")
     }
-    const newOrder = new Order();
+    const newOrder: Order = new Order();
     newOrder.items = products;
     newOrder.user = user;
 
@@ -32,8 +31,8 @@ export class OrdersService {
     return 'Success!'
   }
 
-  remove(id: number) {
-    return this.orderRepository.delete({ id });
+  remove(id: number, user: User) {
+    return this.orderRepository.delete({ id, user: {id: user.id} });
   }
 
   private async getUserOrders(user: User): Promise<Order[]> {

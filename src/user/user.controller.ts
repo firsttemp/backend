@@ -46,13 +46,15 @@ export class UserController {
 
   @Put(":id")
   @ApiParam({ name: 'id', type: Number})
-  updateOne(@Param("id", ParseIntPipe) id: number, @Body() updateUserDto: UserUpdateDto) {
+  updateOne(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateUserDto: UserUpdateDto
+  ) {
     return this.userService.updateById(id, updateUserDto);
   }
 
 
   @Delete(":id")
-
   @ApiParam({ name: 'id', type: Number})
   deleteOne(@Param("id", ParseIntPipe) id: string) {
     return this.userService.deleteById(+id);

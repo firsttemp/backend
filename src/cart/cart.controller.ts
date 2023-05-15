@@ -13,12 +13,18 @@ export class CartController {
   }
 
   @Post('add_item/:id')
-  async addItem(@Param('id') productId: number, @CurrentUser() user: User) {
+  async addItem(
+    @Param('id') productId: number,
+    @CurrentUser() user: User
+  ) {
     return this.cartService.addItem(productId, user);
   }
 
   @Delete('remove-item/:id')
-  async removeItem(@Param('id') itemId: number, @CurrentUser() user: User) {
+  async removeItem(
+    @Param('id') itemId: number,
+    @CurrentUser() user: User
+  ) {
     return this.cartService.removeOne(+itemId, user);
   }
 }

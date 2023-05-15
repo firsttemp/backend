@@ -16,8 +16,11 @@ export class AuthService {
   ) {}
 
   async signUp(dto: CreateUserDto): Promise<Partial<User>> {
-    if (await this.userService.getByUsername(dto.username)) throw new BadRequestException('Username already exists');
-    if (await this.userService.getByEmail(dto.email)) throw new BadRequestException('Email already exists');
+    if (await this.userService.getByUsername(dto.username))
+      throw new BadRequestException('Username already exists');
+
+    if (await this.userService.getByEmail(dto.email))
+      throw new BadRequestException('Email already exists');
 
     const hashPassword: string = await this.hashData(dto.password);
     const {id, email, username}: Partial<User> = await this.userService.create({...dto, password: hashPassword});

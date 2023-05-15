@@ -48,12 +48,6 @@ export class User {
   @Column({ type: "varchar", length: 200, nullable: true})
   avatar: string;
 
-  @Column({ type: "varchar", length: 200, nullable: true, array: true, default: []})
-  images: string[];
-
-  @Column({ type: "varchar", length: 200, nullable: true, array: true, default: []})
-  videos: string[];
-
   @OneToOne(() => Cart, cart => cart.user)
   cart: Cart;
 

@@ -14,13 +14,19 @@ export class OrdersController {
   }
 
   @Post()
-  async create(@Body() dto: OrderCreateDto, @CurrentUser() user: User) {
+  async create(
+    @Body() dto: OrderCreateDto,
+    @CurrentUser() user: User
+  ) {
     return this.orderService.create(dto,  user)
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number) {
-    return this.orderService.remove(id)
+  async delete(
+    @Param('id') id: number,
+    @CurrentUser() user: User
+    ) {
+    return this.orderService.remove(id, user)
   }
 
 }
