@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { Category } from "./category.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -17,18 +17,28 @@ export class CategoriesService {
   }
 
   findByName(name: string) {
-    return this.categoryRepository.findOne({ where: { name } });
+    return this.getCategory(name);
   }
 
-  create(dto: CategoryCreateDto) {
+  async create(dto: CategoryCreateDto) {
+    if (await this.getCategory(dto.name))
+      throw new BadRequestException('Category with this name already exists!');
+
     return this.categoryRepository.save(dto);
   }
 
-  update(dto: CategoryUpdateDto, name: string) {
-    return this.categoryRepository.update({ name }, dto);
+  async update(dto: CategoryUpdateDto, id: number) {
+    if (await this.getCategory(dto.name))
+      throw new BadRequestException('Category with this name already exists!');
+
+    return this.categoryRepository.update({ id }, dto);
   }
 
-  delete(name: string) {
-    return this.categoryRepository.delete({ name });
+  delete(id: number) {
+    return this.categoryRepository.delete(id);
+  }
+
+  private async getCategory(name) {
+    return this.categoryRepository.findOne({where: {name}})
   }
 }

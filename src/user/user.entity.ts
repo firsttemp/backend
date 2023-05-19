@@ -4,7 +4,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   Column,
-  Entity, OneToOne,
+  Entity, OneToOne
 } from "typeorm";
 import { Todo } from "../todo/todo.entity";
 import { Exclude } from "class-transformer";
@@ -48,7 +48,7 @@ export class User {
   @Column({ type: "varchar", length: 200, nullable: true})
   avatar: string;
 
-  @OneToOne(() => Cart, cart => cart.user)
+  @OneToOne(() => Cart, cart => cart.user,{cascade: true})
   cart: Cart;
 
   @OneToMany(() => Order, order => order.user)

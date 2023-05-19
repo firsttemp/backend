@@ -1,25 +1,21 @@
 import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  UploadedFiles,
-  UseInterceptors,
+  Body, Controller, Delete,
+  Get, Param, ParseFilePipe,
+  Post, Put, UploadedFiles,
+  UseInterceptors
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { ProductCreateDto } from "./dto/product-create.dto";
 import { ProductUpdateDto } from "./dto/product-update.dto";
-import { FilesInterceptor } from "@nestjs/platform-express";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { TransformToNumberArrayPipe } from "./transform.pipe";
-import { Product } from "./entities/product.entity";
+import { IProductMedia } from "./product-images.interface";
 
 @Controller("product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get()
+  @Get('all')
   async findAll() {
     return this.productService.findAll();
   }
@@ -31,19 +27,32 @@ export class ProductController {
 
 
   @Post()
-  @UseInterceptors(FilesInterceptor("images"))
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'images' },
+    { name: 'previewImage', maxCount: 1 }
+  ]))
   async create(
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(ParseFilePipe) files: IProductMedia,
     @Body(TransformToNumberArrayPipe) productDto: ProductCreateDto,
-  ): Promise<Product> {
-    return this.productService.create(images, productDto);
+  ): Promise<{}> {
+    return this.productService.createOne(files, productDto);
   }
 
   @Put(":id")
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'images' },
+    { name: 'previewImage', maxCount: 1 }
+  ]))
   async update(
-    @Body() product: ProductUpdateDto,
+    @UploadedFiles(ParseFilePipe) files: IProductMedia,
+    @Body(TransformToNumberArrayPipe) product: ProductUpdateDto,
     @Param("id") id: number
   ) {
-    return this.productService.update(product, id);
+    return this.productService.updateOne(product, files, id);
+  }
+
+  @Delete(':id')
+  deleteOne(@Param('id') id: number) {
+    return this.productService.deleteOne(+id)
   }
 }

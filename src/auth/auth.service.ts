@@ -23,13 +23,13 @@ export class AuthService {
       throw new BadRequestException('Email already exists');
 
     const hashPassword: string = await this.hashData(dto.password);
-    const {id, email, username}: Partial<User> = await this.userService.create({...dto, password: hashPassword});
-    return {id, email, username};
+    return await this.userService.createOne({...dto, password: hashPassword});
   }
 
   async login(user: User): Promise<any> {
     const payload: IJwtPayload = { sub: user.id, email: user.email};
     return {
+      logged_user: user.email,
       access_token: this.jwtService.sign(payload),
     }
   }

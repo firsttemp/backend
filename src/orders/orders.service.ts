@@ -15,7 +15,7 @@ export class OrdersService {
   ) {}
 
   async find(user: User): Promise<Order[]> {
-    return await this.getUserOrders(user);
+    return this.orderRepository.find({ where: { user: { id: user.id } } });
   }
 
   async create(orderCreateDto: OrderCreateDto, user: User): Promise<string> {
@@ -33,9 +33,5 @@ export class OrdersService {
 
   remove(id: number, user: User) {
     return this.orderRepository.delete({ id, user: {id: user.id} });
-  }
-
-  private async getUserOrders(user: User): Promise<Order[]> {
-    return this.orderRepository.find({ where: { user: { id: user.id } } });
   }
 }

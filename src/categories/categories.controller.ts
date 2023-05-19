@@ -22,13 +22,13 @@ export class CategoriesController {
     return this.categoryService.create(dto);
   }
 
-  @Put(':name')
-  async update(@Body() dto: CategoryUpdateDto, @Param('name') name: string) {
-    return this.categoryService.update(dto, name);
+  @Put(':id')
+  async update(@Body() dto: CategoryUpdateDto, @Param('id') id: number) {
+    return this.categoryService.update(dto, id);
   }
 
-  @Delete('name')
-  async delete(@Param('name') name: string) {
-    return this.categoryService.delete(name);
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return this.categoryService.delete(id);
   }
 }

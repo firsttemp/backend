@@ -20,7 +20,7 @@ import { FileModule } from "./file/file.module";
     AuthModule,
     PostgresDbModule,
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, 'public'),
+      rootPath: path.resolve(__dirname, '', 'public'),
     }),
     CartModule,
     OrdersModule,

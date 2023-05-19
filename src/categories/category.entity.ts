@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinTable,
+  Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -20,8 +20,7 @@ export class Category {
   @Column({ type: "varchar", length: 100, default: "No description" })
   description: string;
 
-  @ManyToMany(() => Product, product => product.category)
-  @JoinTable({ name: "product_category"})
+  @ManyToMany(() => Product, product => product.categories)
   products: Product[];
 
   @CreateDateColumn({ type: "date" })

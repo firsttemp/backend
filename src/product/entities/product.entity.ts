@@ -23,20 +23,26 @@ export class Product {
   @Column({ type: "varchar", length: 100 })
   description: string;
 
-  @ManyToMany(() => Cart, cart => cart.items)
-  @JoinTable({name: "product_cart"})
-  cart: Cart;
-
-  @ManyToMany(() => Order, order => order.items)
-  orders: Order[];
+  @Column({type: "varchar", default: ''})
+  previewImage: string;
 
   @Column({ type: "int" })
   price: number;
 
-  @ManyToMany(() => Category, category => category.products)
-  category: Category[];
 
-  @OneToMany(() => ProductImage, productImage => productImage.product)
+  @ManyToMany(() => Cart, cart => cart.items, { cascade: true })
+  @JoinTable({name: "product_cart"})
+  cart: Cart;
+
+  @ManyToMany(() => Order, order => order.items, { cascade: true })
+  @JoinTable({name: "product_order"})
+  orders: Order[];
+
+  @ManyToMany(() => Category, category => category.products, {cascade: true})
+  @JoinTable({ name: "product_category"})
+  categories: Category[];
+
+  @OneToMany(() => ProductImage, productImage => productImage.product, { cascade: true })
   images: ProductImage[];
 
   @CreateDateColumn({ type: "date" })
@@ -44,4 +50,8 @@ export class Product {
 
   @UpdateDateColumn({ type: "date" })
   updatedAt!: Date;
+
+  constructor(data?: Partial<Product>) {
+    Object.assign(this, data);
+  }
 }

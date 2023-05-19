@@ -14,8 +14,13 @@ export class ProductCreateDto {
   @IsNotEmpty()
   price: number;
 
+
+  previewImage: any[]
+
   images: any[];
 
   @IsArray()
   categoryIDs: number[]
 }
+
+

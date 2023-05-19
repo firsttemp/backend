@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinColumn, JoinTable, ManyToMany,
+  Entity, JoinColumn, ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -20,7 +20,6 @@ export class Order {
   status: OrderStatusEnum;
 
   @ManyToMany(() => Product, product => product.orders)
-  @JoinTable({name: "order_product"})
   items: Product[];
 
   @ManyToOne(() => User, user => user.orders)
