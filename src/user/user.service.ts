@@ -2,18 +2,21 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/user-create.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { Repository } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { FileService } from "../file/file.service";
+import { ProfileService } from "../profile/profile.service";
+import { ProfileUpdateDto } from "../profile/dto/profile-update.dto";
+import { PasswordUpdateDto } from "../profile/dto/password-update.dto";
+import { EmailUpdateDto } from "../profile/dto/email-update.dto";
 
 
 @Injectable()
-export class UserService {
+export class UserService extends ProfileService{
 
-  @InjectRepository(User)
-  private readonly userRepository: Repository<User>;
-
-  constructor(private fileService: FileService) {}
+  constructor(fileService: FileService) {
+    super(fileService);
+  }
 
   findAll(): Promise<User[]> {
     return this.userRepository.find({
@@ -26,51 +29,8 @@ export class UserService {
     });
   }
 
-
-  findOne(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { id }});
-  }
-
-  async createOne(user: CreateUserDto): Promise<Partial<User>> {
-    const { id, username, email } = await this.userRepository.save(user);
-    return {id, username, email}
-  }
-
-  async updateOne(updateDto: UserUpdateDto, avatar, id): Promise<any> {
-    const user: User = await this.userRepository.findOne({where: {id}});
-
-    if (!user)
-      throw new BadRequestException('User not found');
-
-    if (updateDto.username) {
-      const { username } = await this.getByUsername(updateDto.username) || {username: ''};
-
-      if (updateDto.username === username)
-        throw new BadRequestException('User with this username already exists!')
-    }
-
-    if (user.avatar) {
-      await this.fileService.removeImages([user.avatar])
-    }
-
-    const [ newAvatar ]: string[] = await this.fileService.saveImages([avatar], 'user_avatars');
-    user.avatar = newAvatar;
-
-    Object.assign(user, updateDto);
-
-    return this.userRepository.update(id, user);
-  }
-
-  async deleteOne(id: number): Promise<any> {
-    const user: User = await this.userRepository.findOne({where: {id}});
-    if (!user)
-      throw new BadRequestException('User not found');
-
-    const delResult = await this.userRepository.delete(id);
-    if (user.avatar)
-      await this.fileService.removeImages([user.avatar])
-
-    return delResult;
+  findOne(user: User): Promise<User> {
+    return this.userRepository.findOne({ where: { id: user.id }});
   }
 
   getByEmail(email: string): Promise<User> {
@@ -81,11 +41,35 @@ export class UserService {
     return this.userRepository.findOne({ where: { username } });
   }
 
-  paginate(limit: number, offset: number) {
-    return this.userRepository.find({
-      skip: offset,
-      take: limit,
-      relations: ["todos"]
-    });
+  getUserById(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id } })
+  }
+
+  async createOne(user: CreateUserDto){
+    try {
+      const newUser = await this.userRepository.save(user);
+      return {
+        message: 'User created!',
+        id: newUser.id,
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
+  async updateProfileInfo(userId: number, updateDto: ProfileUpdateDto) {
+    return this.updateInfo(await this.getUserById(userId), updateDto)
+  }
+
+  async updateProfilePassword(userId: number, updateDto: PasswordUpdateDto) {
+    return this.updatePassword(await this.getUserById(userId), updateDto)
+  }
+
+  async updateProfileEmail(userId: number, updateDto: EmailUpdateDto) {
+    return this.updateEmail(await this.getUserById(userId), updateDto)
+  }
+
+  async updateProfileAvatar(userId: number, avatar: Express.Multer.File) {
+   
   }
 }

@@ -11,6 +11,7 @@ import { Exclude } from "class-transformer";
 import { RoleEnum } from "../shared/types/roles.enum";
 import { Cart } from "../cart/cart.entity";
 import { Order } from "../orders/order.entity";
+import { boolean } from "joi";
 
 @Entity()
 export class User {
@@ -28,7 +29,7 @@ export class User {
   @Column({ type: "varchar", length: 200 })
   password!: string;
 
-  @Column({type: "varchar", length: 30})
+  @Column({type: "varchar", length: 30, default: ""})
   firstname: string;
 
   @Column({type: "varchar", length: 30, default: ""})
@@ -53,6 +54,9 @@ export class User {
 
   @OneToMany(() => Order, order => order.user)
   orders: Order[];
+
+  @Column({ type: 'boolean', default: false })
+  isBlocked: boolean
 
   @CreateDateColumn({ type: "date" })
   createdAt!: Date;

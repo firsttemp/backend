@@ -1,58 +1,73 @@
 import {
-  UseInterceptors,
-  ParseIntPipe,
+  Body,
   Controller,
   Delete,
-  Body,
   Get,
-  Param,
-  Put, UploadedFile, ParseFilePipe
-
+  ParseFilePipe,
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserUpdateDto } from "./dto/user-update.dto";
 import { User } from "./user.entity";
-import { ApiBearerAuth, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Roles } from "../shared/decorators/roles.decorator";
 import { RoleEnum } from "../shared/types/roles.enum";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { CurrentUser } from "../shared/decorators/current-user.decorator";
+import { ProfileUpdateDto } from "../profile/dto/profile-update.dto";
 
 @ApiTags('users')
 @ApiBearerAuth()
-@Roles(RoleEnum.Admin)
+@Roles(RoleEnum.Admin, RoleEnum.SuperAdmin)
 @Controller("/users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get("all")
-  getAll() {
-    return this.userService.findAll();
+  @Get('all')
+  findMany() {
+
   }
 
-
-  @Get(":id")
-  @ApiParam({ name: 'id', type: Number})
-  getOne(@Param("id", ParseIntPipe) id: number): Promise<User> {
-    return this.userService.findOne(id);
+  @Get()
+  findOne(@Query('id') id: number) {
+    return this.userService.getUserById(id)
   }
 
-  @ApiParam({ name: 'id', type: Number})
-  @UseInterceptors(FileInterceptor('avatar'))
-  @Put(":id")
-  updateOne(
-    @UploadedFile(ParseFilePipe) avatar: Express.Multer.File,
-    @Body() updateUserDto: UserUpdateDto,
-    @Param("id") id: number,
+  @Put()
+  updateInfo(
+    @Query('id') id: number,
+    updateDto: ProfileUpdateDto
   ) {
-    return this.userService.updateOne(updateUserDto, avatar, id);
+      return this.userService.updateProfileInfo(id, updateDto)
   }
 
-
-  @ApiParam({ name: 'id', type: Number})
-  @Delete(":id")
-  deleteOne(@Param("id", ParseIntPipe) id: string) {
-    return this.userService.deleteOne(+id);
+  @UseInterceptors(FileInterceptor('avatar'))
+  @Put()
+  updateAvatar(
+    @Query('id') id: number,
+    @UploadedFile(ParseFilePipe) avatar: Express.Multer.File
+  ) {
 
   }
+
+  @Put()
+  updatePassword() {
+
+  }
+
+  @Put()
+  block(@CurrentUser() user: User) {
+
+  }
+
+  @Delete()
+  deleteProfile(@CurrentUser() user: User) {
+
+
+  }
+
 
 }

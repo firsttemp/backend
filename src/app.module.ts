@@ -11,12 +11,14 @@ import { ProductModule } from './product/product.module';
 import { CategoriesModule } from './categories/categories.module';
 import * as path from "path";
 import { FileModule } from "./file/file.module";
+import { ProfileModule } from "./profile/profile.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TodoModule,
     UserModule,
+    ProfileModule,
     AuthModule,
     PostgresDbModule,
     ServeStaticModule.forRoot({
@@ -26,7 +28,7 @@ import { FileModule } from "./file/file.module";
     OrdersModule,
     ProductModule,
     CategoriesModule,
-    FileModule
+    FileModule,
   ]
 })
 export class AppModule {}

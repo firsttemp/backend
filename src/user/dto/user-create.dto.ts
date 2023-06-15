@@ -10,6 +10,7 @@ export class CreateUserDto {
   @ApiProperty({ example: 'Admin'})
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   firstname: string;
 
   @ApiProperty({ example: 'User'})
